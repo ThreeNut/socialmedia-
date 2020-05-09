@@ -4,12 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.tensquare.recruit.pojo.Enterprise;
 import com.tensquare.recruit.service.EnterpriseService;
@@ -104,5 +99,14 @@ public class EnterpriseController {
 		enterpriseService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
-	
+
+	/**
+	 *  查询热门企业
+	 *  http://localhost:9002/enterprise/search/hotlist
+	 * @return lsit
+	 */
+	@GetMapping(value = "/search/hotlist")
+	public Result hotlist(){
+		return new Result(true,StatusCode.OK,"查询ok",enterpriseService.hotlist());
+	}
 }

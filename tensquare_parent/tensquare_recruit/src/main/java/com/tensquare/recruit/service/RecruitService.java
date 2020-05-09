@@ -107,6 +107,23 @@ public class RecruitService {
 	}
 
 	/**
+	 * 查询状态为2并以创建日期降序排序，查询前4条记录
+	 * @param state
+	 * @return
+	 */
+	public List<Recruit> findTop4ByStateOrderByCreatetimeDesc(String state){
+		return recruitDao.findTop4ByStateOrderByCreatetimeDesc(state);
+	}
+
+	/**
+	 *   http://localhost:9002/recruit/search/newlist
+	 * 查询状态不为0并以创建日期降序排序，查询前12条记录
+	 * @return
+	 */
+	public List<Recruit> newlist(){
+		return recruitDao.findTop12ByStateNotOrderByCreatetimeDesc("0");
+	}
+	/**
 	 * 动态条件构建
 	 * @param searchMap
 	 * @return

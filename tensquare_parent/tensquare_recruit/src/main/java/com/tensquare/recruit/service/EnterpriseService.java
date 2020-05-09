@@ -106,6 +106,10 @@ public class EnterpriseService {
 		enterpriseDao.deleteById(id);
 	}
 
+	public List<Enterprise> hotlist(){
+		return enterpriseDao.findByIshot("1");
+	}
+
 	/**
 	 * 动态条件构建
 	 * @param searchMap

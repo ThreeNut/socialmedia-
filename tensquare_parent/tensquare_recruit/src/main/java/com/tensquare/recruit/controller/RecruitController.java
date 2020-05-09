@@ -2,14 +2,10 @@ package com.tensquare.recruit.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.tensquare.recruit.pojo.Recruit;
 import com.tensquare.recruit.service.RecruitService;
@@ -104,5 +100,20 @@ public class RecruitController {
 		recruitService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
 	}
-	
+
+	/**
+	 *  查询状态为2并以创建日期降序排序，查询前4条记录
+	 *  http://localhost:9002/recruit/search/recommend
+	 * @return 前4条记录
+	 */
+	@GetMapping(value = "/search/recommend")
+	public Result recommend(){
+		List<Recruit> list = recruitService.findTop4ByStateOrderByCreatetimeDesc("2");
+		return new Result(true, StatusCode.OK,"查询成功",list );
+	}
+
+	@GetMapping(value = "/search/newlist")
+	public Result newlist(){
+		return new Result(true,StatusCode.OK,"查询ok",recruitService.newlist());
+	}
 }
