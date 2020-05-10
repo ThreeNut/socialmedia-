@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
@@ -17,8 +18,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import util.IdWorker;
 
 import com.tensquare.article.dao.ArticleDao;
@@ -39,6 +42,8 @@ public class ArticleService {
 	@Autowired
 	private IdWorker idWorker;
 
+	@Autowired
+	private RedisTemplate redisTemplate;
 	/**
 	 * 查询全部列表
 	 * @return
@@ -73,12 +78,24 @@ public class ArticleService {
 	}
 
 	/**
+	 *  http://localhost:9004/article/1  缓存测试
 	 * 根据ID查询实体
 	 * @param id
 	 * @return
 	 */
 	public Article findById(String id) {
-		return articleDao.findById(id).get();
+		//使用缓存避免多次查询
+		//1.先从缓存中查询数据
+		Article article = (Article) redisTemplate.opsForValue().get("article_" + id);
+		//2.如果没有缓存
+		if (article == null){
+			System.out.println("第一次查询!!需要先从数据查询");
+			article = articleDao.findById(id).get();//查询数据库
+			//存入缓存
+			System.out.println("存入缓存...");  //十秒后删除缓存
+			redisTemplate.opsForValue().set("article_"+id,article,10, TimeUnit.MINUTES);
+		}
+		return article;
 	}
 
 	/**
@@ -95,6 +112,7 @@ public class ArticleService {
 	 * @param article
 	 */
 	public void update(Article article) {
+		redisTemplate.delete("article_"+article.getId());
 		articleDao.save(article);
 	}
 
@@ -103,9 +121,27 @@ public class ArticleService {
 	 * @param id
 	 */
 	public void deleteById(String id) {
+		redisTemplate.delete("article_"+id);//删除缓存
 		articleDao.deleteById(id);
 	}
 
+	/**
+	 * 审核文章
+	 * @param id
+	 */
+	@Transactional
+	public void examine(String id){
+		articleDao.examine(id);
+	}
+
+	/**
+	 * 点赞更新
+	 * @param thumbupId
+	 */
+	@Transactional
+	public void updateThumbup(String thumbupId){
+		articleDao.updateThumbup(thumbupId);
+	}
 	/**
 	 * 动态条件构建
 	 * @param searchMap

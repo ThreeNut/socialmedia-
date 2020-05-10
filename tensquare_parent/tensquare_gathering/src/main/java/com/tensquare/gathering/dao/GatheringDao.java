@@ -1,14 +1,14 @@
-package com.tensquare.article.dao;
+package com.tensquare.gathering.dao;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import com.tensquare.article.pojo.Article;
+import com.tensquare.gathering.pojo.Gathering;
 /**
  * 数据访问接口
  * @author Administrator
  *
  */
-public interface ArticleDao extends JpaRepository<Article,String>,JpaSpecificationExecutor<Article>{
+public interface GatheringDao extends JpaRepository<Gathering,String>,JpaSpecificationExecutor<Gathering>{
 	
 }
