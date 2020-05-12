@@ -1,11 +1,11 @@
 server: 
-  port: 9001
+  port: 9005
 spring: 
   application:  
     name: tensquare -gathering #指定服务名
   datasource:  
-    driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://192.168.44.130:3306/tensquare_gathering?useUnicode=true&amp;characterEncoding=UTF8
+    driverClassName:
+    url: jdbc:mysql://192.168.0.102:3306/tensquare_gathering?characterEncoding=UTF8
     username: root
     password: root
   jpa: 

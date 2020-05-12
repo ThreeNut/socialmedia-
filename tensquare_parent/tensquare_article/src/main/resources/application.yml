@@ -5,7 +5,7 @@ spring:
     name: tensquare -article #指定服务名
   datasource:  
     driverClassName:
-    url: jdbc:mysql://192.168.44.130:3306/tensquare_article?charaterEncoding=utf-8e
+    url: jdbc:mysql://192.168.0.102:3306/tensquare_article?characterEncoding=UTF8
     username: root
     password: root
   jpa: 
@@ -13,3 +13,7 @@ spring:
     show-sql: true
   redis:
     host: 192.168.44.130  #默认端口号6379
+  data:
+    mongodb:
+      host: 192.168.0.102
+      database: recruitdb

@@ -1,8 +1,8 @@
 package com.tensquare.gathering.controller;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,10 +18,18 @@ import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
 /**
+ *
+ * Spring Cache使用方法与Spring对事务管理的配置相似。Spring Cache的核心就是对某
+ * 个方法进行缓存，其实质就是缓存该方法的返回结果，并把方法参数和结果用键值对的
+ * 方式存放到缓存中，当再次调用该方法使用相应的参数时，就会直接从缓存里面取出指
+ * 定的结果进行返回。
+ *
+ * 应用场景  findById 根据id查询数据
  * 控制器层
  * @author Administrator
  *
  */
+
 @RestController
 @CrossOrigin
 @RequestMapping("/gathering")
