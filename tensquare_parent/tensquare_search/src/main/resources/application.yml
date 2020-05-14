@@ -1,0 +1,9 @@
+server:
+  port: 9007
+spring:
+  application:
+    name: tensquare-search
+  data:
+    elasticsearch:
+      cluster-nodes: 192.168.0.102:9300 #java  API使用的端口9300 http使用9200
+      cluster-name: my-application #cluster.name在es配置文件（elasticsearch-2.3.3\config\elasticsearch.yml）

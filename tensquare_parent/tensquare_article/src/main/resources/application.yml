@@ -15,5 +15,5 @@ spring:
     host: 192.168.44.130  #默认端口号6379
   data:
     mongodb:
-      host: 192.168.0.102
-      database: recruitdb
+      host: 192.168.0.102 #use demo  创建数据库切换到demo数据库,要有数据才会显示在数据库列表中
+      database: recruitdb #db.goods.insert({id:123,name:'hello'}) // 给goods表 插入数据(如果此表不存在则创建)
