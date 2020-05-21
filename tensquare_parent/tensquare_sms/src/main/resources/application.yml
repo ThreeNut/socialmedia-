@@ -1,0 +1,13 @@
+server:
+  port: 9009
+spring:
+  application:
+    name: tensquare-sms
+  rabbitmq:
+    host: 192.168.44.131
+aliyun:
+  sms:
+    accessKeyId: LTAI4FjgA5RAqTz9tCrt3QQn
+    accessKeySecret: tHNj5Nx9GD0HVEai78h4QSlsGbTwPH
+    template_code: SMS_182669312
+    sing_name: 橘子音乐
