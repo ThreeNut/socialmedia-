@@ -17,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import util.IdWorker;
@@ -25,7 +26,7 @@ import com.tensquare.user.dao.AdminDao;
 import com.tensquare.user.pojo.Admin;
 
 /**
- * 服务层
+ * 服务层  管理员
  * 
  * @author Administrator
  *
@@ -39,6 +40,8 @@ public class AdminService {
 	@Autowired
 	private IdWorker idWorker;
 
+	@Autowired
+	private BCryptPasswordEncoder encoder;
 	/**
 	 * 查询全部列表
 	 * @return
@@ -82,11 +85,13 @@ public class AdminService {
 	}
 
 	/**
-	 * 增加
+	 * 增加 管理员
 	 * @param admin
 	 */
 	public void add(Admin admin) {
-		admin.setId( idWorker.nextId()+"" );
+		admin.setId( idWorker.nextId()+"" );//雪花算法生成id
+		//密码加密 .encode
+		admin.setPassword(encoder.encode(admin.getPassword()));
 		adminDao.save(admin);
 	}
 
@@ -106,6 +111,21 @@ public class AdminService {
 		adminDao.deleteById(id);
 	}
 
+	/**
+	 * 管理员登录操作
+	 * @param admin
+	 * @return
+	 */
+	public Admin login(Admin admin) {
+		//先根据用户名查询对象 (有疑问 ...如果管理员用户 存在多个相同的用户??且密码一致...)
+		Admin byLoginname = adminDao.findByLoginname(admin.getLoginname());
+		//.matches 查看加密后的和输入的 密码是否匹配
+		if (byLoginname!=null && encoder.matches(admin.getPassword(),byLoginname.getPassword())){
+			return byLoginname;
+		}
+		//然后拿数据库密码和用户输入密码匹配
+		return null; //登录失败此时返回null
+	}
 	/**
 	 * 动态条件构建
 	 * @param searchMap
@@ -141,5 +161,6 @@ public class AdminService {
 		};
 
 	}
+
 
 }

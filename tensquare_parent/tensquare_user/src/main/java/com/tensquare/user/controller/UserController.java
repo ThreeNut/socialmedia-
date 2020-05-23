@@ -1,4 +1,5 @@
 package com.tensquare.user.controller;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,8 @@ import com.tensquare.user.service.UserService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import util.JwtUtil;
+
 /**
  * 控制器层
  * @author Administrator
@@ -27,7 +30,11 @@ public class UserController {
 
 	@Autowired
 	private RedisTemplate redisTemplate;
+
+	@Autowired
+	private JwtUtil jwtUtil;
 	//发送验证码(点击发送验证码)
+	//http://localhost:9008/user/sendSms/18240720360
 	@PostMapping (value = "/sendSms/{mobile}")
 	public Result sendSms(@PathVariable String mobile){
 		userService.sendSms(mobile);
@@ -112,12 +119,33 @@ public class UserController {
 	
 	/**
 	 * 删除
+	 * http://localhost:9008/user/用户的id
 	 * @param id
 	 */
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
 		userService.deleteById(id);
 		return new Result(true,StatusCode.OK,"删除成功");
+	}
+
+	/***
+	 *   http://localhost:9008/user/login
+	 *  用户登录...
+	 * @param user
+	 * @return
+	 */
+	@PostMapping(value = "/login")
+	public Result login(@RequestBody User user){
+		user = userService.login(user.getMobile(),user.getPassword());
+		if (user == null){
+			return new Result(false,StatusCode.ERROR,"登陆失败");
+		}
+		//用户登录后给与 一个令牌(普通用户)
+		String token = jwtUtil.createJWT(user.getId(), user.getMobile(), "user");
+		Map<String,Object> map = new HashMap<>();
+		map.put("toke",token);
+		map.put("roles","user");
+		return new Result(true,StatusCode.OK,"登录ok",map);
 	}
 	
 }

@@ -1,15 +1,10 @@
 package com.tensquare.user.controller;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.tensquare.user.pojo.Admin;
 import com.tensquare.user.service.AdminService;
@@ -17,6 +12,8 @@ import com.tensquare.user.service.AdminService;
 import entity.PageResult;
 import entity.Result;
 import entity.StatusCode;
+import util.JwtUtil;
+
 /**
  * 控制器层
  * @author Administrator
@@ -29,7 +26,9 @@ public class AdminController {
 
 	@Autowired
 	private AdminService adminService;
-	
+
+	@Autowired
+	private JwtUtil jwtUtil;
 	
 	/**
 	 * 查询全部数据
@@ -47,7 +46,7 @@ public class AdminController {
 	 */
 	@RequestMapping(value="/{id}",method= RequestMethod.GET)
 	public Result findById(@PathVariable String id){
-		return new Result(true,StatusCode.OK,"查询成功",adminService.findById(id));
+		return new Result(true,StatusCode.OK,"管理员查询成功",adminService.findById(id));
 	}
 
 
@@ -61,7 +60,7 @@ public class AdminController {
 	@RequestMapping(value="/search/{page}/{size}",method=RequestMethod.POST)
 	public Result findSearch(@RequestBody Map searchMap , @PathVariable int page, @PathVariable int size){
 		Page<Admin> pageList = adminService.findSearch(searchMap, page, size);
-		return  new Result(true,StatusCode.OK,"查询成功",  new PageResult<Admin>(pageList.getTotalElements(), pageList.getContent()) );
+		return  new Result(true,StatusCode.OK,"管理员查询成功",  new PageResult<Admin>(pageList.getTotalElements(), pageList.getContent()) );
 	}
 
 	/**
@@ -71,17 +70,17 @@ public class AdminController {
      */
     @RequestMapping(value="/search",method = RequestMethod.POST)
     public Result findSearch( @RequestBody Map searchMap){
-        return new Result(true,StatusCode.OK,"查询成功",adminService.findSearch(searchMap));
+        return new Result(true,StatusCode.OK,"管理员查询成功",adminService.findSearch(searchMap));
     }
 	
 	/**
-	 * 增加
+	 * 增加 管理员
 	 * @param admin
 	 */
 	@RequestMapping(method=RequestMethod.POST)
 	public Result add(@RequestBody Admin admin  ){
 		adminService.add(admin);
-		return new Result(true,StatusCode.OK,"增加成功");
+		return new Result(true,StatusCode.OK,"管理员增加成功");
 	}
 	
 	/**
@@ -92,7 +91,7 @@ public class AdminController {
 	public Result update(@RequestBody Admin admin, @PathVariable String id ){
 		admin.setId(id);
 		adminService.update(admin);		
-		return new Result(true,StatusCode.OK,"修改成功");
+		return new Result(true,StatusCode.OK,"管理员修改成功");
 	}
 	
 	/**
@@ -102,7 +101,27 @@ public class AdminController {
 	@RequestMapping(value="/{id}",method= RequestMethod.DELETE)
 	public Result delete(@PathVariable String id ){
 		adminService.deleteById(id);
-		return new Result(true,StatusCode.OK,"删除成功");
+		return new Result(true,StatusCode.OK,"管理员删除成功");
 	}
-	
+
+	/**
+	 * 管理员登录
+	 * http://localhost:9008/admin/login  post
+	 * @param admin
+	 * @return
+	 */
+	@PostMapping(value = "/login")
+	public Result login(@RequestBody Admin admin){
+		 Admin adminLogin=adminService.login(admin);
+		 if (adminLogin==null){
+			return new Result(false,StatusCode.ERROR,"管理员登陆失败");
+		 }
+		 //使得前后端可以通话的操作,采用jwt实现
+		//使用令牌
+		String token = jwtUtil.createJWT(adminLogin.getId(), adminLogin.getLoginname(), "admin");
+		Map<String,Object> map=new HashMap<>();
+		map.put("token",token);
+		map.put("roles","admin");
+		return new Result(true,StatusCode.OK,"管理员登陆成功!",map);
+	}
 }
