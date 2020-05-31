@@ -25,6 +25,7 @@ import org.springframework.http.HttpRequest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import util.IdWorker;
 
 import com.tensquare.user.dao.UserDao;
@@ -226,7 +227,7 @@ public class UserService {
 		map.put("mobile",mobile);//手机号
 		map.put("code",checkCode);//验证码
 		//发送给用户一份
-		//rabbitTemplate.convertAndSend("sms",map);
+		rabbitTemplate.convertAndSend("sms",map);
 		System.out.println(checkCode);
     }
 
@@ -237,5 +238,14 @@ public class UserService {
 			return user;
 		}
 		return null;
+	}
+
+		//	更新用户的关注数  以及关注用户的粉丝数
+	@Transactional
+	public void updateFansAndFollow(int x, String userid, String friendid) {
+		//用户点击关注后 被点击的用户粉丝数+1
+		userDao.updatefanscount(x,friendid);
+		//用户点击关注后 用户自己关注+1
+		userDao.updatefollowcount(x,userid);
 	}
 }

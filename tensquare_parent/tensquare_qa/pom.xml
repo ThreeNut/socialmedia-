@@ -15,6 +15,16 @@
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
+	  <!--eureka 客户端 意思是要把此服(article)务注册到 eureka服务里面-->
+	  <dependency>
+		  <groupId>org.springframework.cloud</groupId>
+		  <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+	  </dependency>
+	  <!--问答模块 调用base模块 导入openfeign-->
+	  <dependency>
+		  <groupId>org.springframework.cloud</groupId>
+		  <artifactId>spring-cloud-starter-openfeign</artifactId>
+	  </dependency>
 		<dependency>
 			<groupId>com.zou</groupId>
 			<artifactId>tensquare_common</artifactId>

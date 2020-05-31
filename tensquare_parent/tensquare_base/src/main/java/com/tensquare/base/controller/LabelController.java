@@ -30,9 +30,9 @@ public class LabelController {
         return new Result(true, StatusCode.OK,"查询ok!",service.findAll());
     }
 
-    @GetMapping(value = "/{findById}")
-    public Result findById(@PathVariable String findById){
-        return new Result(true, StatusCode.OK,"查询ok!",service.findById(findById));
+    @GetMapping(value = "/{id}")
+    public Result findById(@PathVariable String id){
+        return new Result(true, StatusCode.OK,"查询ok!",service.findById(id));
     }
 
     //更新

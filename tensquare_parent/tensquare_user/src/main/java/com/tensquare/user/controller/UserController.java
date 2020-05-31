@@ -147,5 +147,14 @@ public class UserController {
 		map.put("roles","user");
 		return new Result(true,StatusCode.OK,"登录ok",map);
 	}
-	
+
+	/**
+	 * 更新用户的关注数  以及关注用户的粉丝数
+	 * @param userid
+	 * @param friendid
+	 */
+	@PutMapping("/{userid}/{friendid}/{x}")
+	public void updateFanscountAndFollowcount(@PathVariable String userid,@PathVariable String friendid ,@PathVariable int x){
+		userService.updateFansAndFollow(x,userid,friendid);
+	}
 }

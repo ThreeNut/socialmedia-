@@ -2,6 +2,7 @@ package com.tensquare.qa.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.tensquare.qa.client.BaseClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
  *
  */
 @RestController
-@CrossOrigin
+@CrossOrigin //解决跨域问题
 @RequestMapping("/problem")
 public class ProblemController {
 
@@ -30,6 +31,18 @@ public class ProblemController {
 	
 	@Autowired
 	private HttpServletRequest request;
+
+	@Autowired
+	private BaseClient baseClient;
+
+
+	//调用远程服务(本问答模块调用 base模块)
+	//调用远程模块服务 http://localhost:9003/problem/label/2
+	@GetMapping(value = "/label/{id}")//注意路径
+	public Result findLableById(@PathVariable String id){
+	  Result result = baseClient.findById(id);
+	  return result;
+	}
 	/**
 	 * 查询全部数据
 	 * @return
