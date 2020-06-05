@@ -3,6 +3,8 @@ server:
 spring:
   application:
     name: tensquare-base
+  rabbitmq: #用于监听 云配置的修改情况
+    host: 192.168.44.132
   datasource:
     driverClassName:
     url: jdbc:mysql://192.168.44.132:3306/tensquare_base?characterEncoding=UTF8
