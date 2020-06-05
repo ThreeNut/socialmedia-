@@ -1,0 +1,8 @@
+server:
+  port: 6868
+eureka:    # eureka相当于Zookeeper 服务注册中心
+  client:
+    register-with-eureka: false #是否将当前服务器注册到服务器
+    fetch-registry: false
+    serviceUrl:
+      defaultZone: http://127.0.0.1:${server.port}/eureka/

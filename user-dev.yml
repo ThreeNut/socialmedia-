@@ -1,16 +1,24 @@
-server:
-  port: 9001
-spring:
-  application:
-    name: tensquare-base
-  datasource:
+server: 
+  port: 9008
+spring: 
+  application:  
+    name: tensquare-user #指定服务名
+  datasource:  
     driverClassName:
-    url: jdbc:mysql://192.168.44.132:3306/tensquare_base?characterEncoding=UTF8
+    url: jdbc:mysql://192.168.44.132:3306/tensquare_user?characterEncoding=UTF8
     username: root
     password: root
-  jpa:
-    database: mysql
+  jpa: 
+    database: MySQL
     show-sql: true
+  redis:
+    host: 192.168.44.132
+  rabbitmq:
+    host: 192.168.44.132
+jwt:
+  config:
+    key: itcast
+    ttl: 3600000
 eureka: # # eureka相当于Zookeeper 服务注册中心
   client:  #eureka 客户端 意思是要把此服(article)务注册到 eureka服务里面
     service-url:

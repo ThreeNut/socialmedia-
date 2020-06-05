@@ -1,0 +1,24 @@
+server:
+  port: 9012
+spring:
+  application:
+    name: tensquare-web #指定服务名
+eureka: # # eureka相当于Zookeeper 服务注册中心
+  client:  #eureka 客户端 意思是要把此服(article)务注册到 eureka服务里面
+    service-url:
+      defaultZone: http://127.0.0.1:6868/eureka/
+  instance: #跨域访问 方便测试...
+    prefer-ip-address: true
+
+zuul: #网关设置
+  routes:
+    tensquare-base: # http://localhost:9011/base/label  等价于 http://localhost:9001/label
+      path: /base/** #拦截此路径 通过本9011路径就可以访问到 base 9001的路径
+      serviceId: tensquare-base
+    tensquare-user:
+      path: /user/**
+      serviceId: tensquare-user
+    tensquare-qa:
+      path: /qa/**
+      serviceId: tensquare-qa
+  sensitive-headers: #Zuul进行路由转发时RibbonRoutingFilter过滤器,对请求参数和请求头进行了重新过滤和组装
