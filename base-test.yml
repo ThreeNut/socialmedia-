@@ -7,7 +7,7 @@ spring:
     host: 192.168.44.132
   datasource:
     driverClassName:
-    url: jdbc:mysql://192.168.44.131:3306/tensquare_base?characterEncoding=UTF8
+    url: jdbc:mysql://192.168.44.1313:3306/tensquare_base?characterEncoding=UTF8
     username: root
     password: root
   jpa:
